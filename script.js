@@ -35,4 +35,6 @@ $(document).ready(function() {
 
     // Generate options when the page loads
     generateOptions();
+
+    
 });

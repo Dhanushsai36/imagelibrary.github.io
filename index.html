@@ -7,17 +7,12 @@
     <!-- Bootstrap CSS -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
-    <style>
-        .card {
-            width: 200px; /* Adjust width as needed */
-            height: auto; /* Maintain aspect ratio */
-            margin: 10px; /* Add spacing between images */
-        }
-    </style>
+        <!-- Custom CSS -->
+        <link href="styles.css" rel="stylesheet">
 </head>
 <body>
     <div class="container-fluid">
-        <h1 class="text-center mt-5 mb-4">Photo Album</h1>
+        <h1 class="text-center mt-5 mb-4 title-background">Photo Album</h1>
         <div class="row">
             <!-- Image containers -->
             <!-- Add image containers here -->
@@ -97,11 +92,21 @@
         </div>
     </div>
 
+    <!-- Button to process images -->
+    <div class="process-btn">
+        <button class="btn btn-success" onclick="openProcessPage()">Process the Images</button>
+    </div>
+
     <!-- Bootstrap JS (optional, for some components) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <!-- Custom JavaScript -->
     <script src="script.js"></script>
+    <script>
+        function openProcessPage() {
+            window.open('process.html', '_blank');
+        }
+    </script>
 </body>
 </html>

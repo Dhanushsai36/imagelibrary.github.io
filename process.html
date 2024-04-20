@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Process Images</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+        .operation-btns {
+            margin-top: 20px;
+        }
+        .btn-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn-container .btn {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <h1 class="text-center mt-5 mb-4">Process Images</h1>
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="form-group">
+                    <label for="imageSelect">Select an Image:</label>
+                    <select class="form-control" id="imageSelect">
+                        <option value="">Choose Image...</option>
+                        <!-- Options for selecting images from image1 to image12 will be dynamically generated here -->
+                    </select>
+                </div>
+                <div id="operationButtons" class="operation-btns" style="display: none;">
+                    <!-- Buttons for various image operations will be dynamically generated here -->
+                </div>
+                <button id="resetBtn" class="btn btn-warning btn-block mt-3">Reset Image</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="qrCodeContainer"></div>
+
+    <label for="myfile">Select a file:</label>
+    <input type="file" id="myfile" name="myfile">
+
+    <!-- Bootstrap JS (optional, for some components) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script>
+    $(document).ready(function() {
+        // Generate options for selecting images from image1 to image12
+        var options = '';
+        for (var i = 1; i <= 12; i++) {
+            options += '<option value="images/image' + i + '.jpg">Image ' + i + '</option>';
+        }
+        // Append options to the dropdown
+        $('#imageSelect').append(options);
+
+        // Add change event to image dropdown
+        $('#imageSelect').on('change', function() {
+            var selectedImage = $(this).val();
+            if (selectedImage) {
+                // Display the selected image
+                var imageHTML = '<img src="' + selectedImage + '" alt="Selected Image">';
+                $('#operationButtons').html(imageHTML);
+
+                // Display the operation buttons
+                $('#operationButtons').append('<div class="btn-container"></div>');
+                $('.btn-container').append('<button class="btn btn-primary" id="reddishBtn">Reddish Image</button>');
+                $('.btn-container').append('<button class="btn btn-primary" id="bluishBtn">Bluish Image</button>');
+                $('.btn-container').append('<button class="btn btn-primary" id="greenishBtn">Greenish Image</button>');
+                $('.btn-container').append('<button class="btn btn-primary" id="duplicateBtn">Duplicate Image</button>');
+                $('.btn-container').append('<button class="btn btn-primary" id="brightnessBtn">Increase Brightness</button>');
+                $('.btn-container').append('<button class="btn btn-primary" id="resolutionBtn">Reduce Resolution</button>');
+                $('.btn-container').append('<button class="btn btn-primary" id="greyScaleBtn">RGB to Grey Scale</button>');
+                $('.btn-container').append('<button class="btn btn-primary" id="qrCodeBtn">Generate QR Code</button>');
+
+                $('#operationButtons').show();
+            } else {
+                $('#operationButtons').hide().empty();
+            }
+        });
+
+        // Add click event to Reset Image button
+        $('#resetBtn').on('click', function() {
+            // Reset the image to its original source
+            var originalSrc = $('#imageSelect').val();
+            $('img').attr('src', originalSrc);
+
+            // Clear the operation buttons
+            $('#operationButtons').empty().hide();
+        });
+
+        // Add click event to Reddish Image button
+        $(document).on('click', '#reddishBtn', function() {
+            // Get the selected image
+            var img = document.getElementById('selectedImage');
+
+            // Create a canvas element
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+
+            // Set canvas dimensions to image dimensions
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            // Draw the image on the canvas
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            // Get the image data
+            var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            var data = imageData.data;
+
+            // Process each pixel to increase the red content
+            for (var i = 0; i < data.length; i += 4) {
+                data[i] += 50; // Increase red content
+            }
+
+            // Put the modified image data back to the canvas
+            ctx.putImageData(imageData, 0, 0);
+
+            // Replace the original image with the modified image
+            img.src = canvas.toDataURL();
+
+            // Hide the button after processing
+            $(this).hide();
+        });
+
+        // Add click event to Bluish Image button
+        $(document).on('click', '#bluishBtn', function() {
+            // Get the selected image
+            var img = document.querySelector('#operationButtons img');
+
+            // Create a canvas element
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+
+            // Set canvas dimensions to image dimensions
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            // Draw the image on the canvas
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            // Get the image data
+            var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            var data = imageData.data;
+
+            // Process each pixel to increase the blue content
+            for (var i = 0; i < data.length; i += 4) {
+                data[i + 2] += 50; // Increase blue content
+            }
+
+            // Put the modified image data back to the canvas
+            ctx.putImageData(imageData, 0, 0);
+
+            // Replace the original image with the modified image
+            img.src = canvas.toDataURL();
+
+            // Hide the button after processing
+            // $(this).hide();
+        });
+
+        // Add click event to Greenish Image button
+        $(document).on('click', '#greenishBtn', function() {
+            // Get the selected image
+            var img = document.querySelector('#operationButtons img');
+
+            // Create a canvas element
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+
+            // Set canvas dimensions to image dimensions
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            // Draw the image on the canvas
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            // Get the image data
+            var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            var data = imageData.data;
+
+            // Process each pixel to increase the green content
+            for (var i = 0; i < data.length; i += 4) {
+                data[i + 1] += 50; // Increase green content
+            }
+
+            // Put the modified image data back to the canvas
+            ctx.putImageData(imageData, 0, 0);
+
+            // Replace the original image with the modified image
+            img.src = canvas.toDataURL();
+
+            // Hide the button after processing
+            // $(this).hide();
+        });
+
+        // Add click event to Duplicate Image button
+        $(document).on('click', '#duplicateBtn', function() {
+            // Clone the selected image
+            var clonedImage = $('#operationButtons img').clone();
+
+            // Append the cloned image to the operation buttons container
+            $('#operationButtons').append(clonedImage);
+
+            // Show the cloned image
+            // clonedImage.show();
+        });
+
+        // Add click event to Increase Brightness button
+        $(document).on('click', '#brightnessBtn', function() {
+            // Get the selected image
+            var img = document.querySelector('#operationButtons img');
+
+            // Create a canvas element
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+
+            // Set canvas dimensions to image dimensions
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            // Draw the image on the canvas
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            // Get the image data
+            var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            var data = imageData.data;
+
+            // Process each pixel to increase the brightness
+            for (var i = 0; i < data.length; i += 4) {
+                data[i] += 50; // Increase red content
+                data[i + 1] += 50; // Increase green content
+                data[i + 2] += 50; // Increase blue content
+            }
+
+            // Put the modified image data back to the canvas
+            ctx.putImageData(imageData, 0, 0);
+
+            // Replace the original image with the modified image
+            img.src = canvas.toDataURL();
+
+            // Hide the button after processing
+            // $(this).hide();
+        });
+
+        // Add click event to Reduce Resolution button
+        $(document).on('click', '#resolutionBtn', function() {
+            // Get the selected image
+            var img = document.querySelector('#operationButtons img');
+
+            // Create a canvas element
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+
+            // Set canvas dimensions to image dimensions
+            canvas.width = img.width / 2;
+            canvas.height = img.height / 2;
+
+            // Draw the image on the canvas
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            // Replace the original image with the modified image
+            img.src = canvas.toDataURL();
+
+            // Hide the button after processing
+            // $(this).hide();
+        });
+
+        // Add click event to RGB to Grey Scale button
+        $(document).on('click', '#greyScaleBtn', function() {
+            // Get the selected image
+            var img = document.querySelector('#operationButtons img');
+
+            // Create a canvas element
+            var canvas = document.createElement('canvas');
+            var ctx = canvas.getContext('2d');
+
+            // Set canvas dimensions to image dimensions
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            // Draw the image on the canvas
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            // Get the image data
+            var imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            var data = imageData.data;
+
+            // Process each pixel to convert to grayscale
+            for (var i = 0; i < data.length; i += 4) {
+                var avg = (data[i] + data[i + 1] + data[i + 2]) / 3;
+                data[i] = avg; // Red
+                data[i + 1] = avg; // Green
+                data[i + 2] = avg; // Blue
+            }
+
+            // Put the modified image data back to the canvas
+            ctx.putImageData(imageData, 0, 0);
+
+            // Replace the original image with the modified image
+            img.src = canvas.toDataURL();
+
+            // Hide the button after processing
+            // $(this).hide();
+        });
+
+        // Add click event to Generate QR Code button
+        $(document).on('click', '#qrCodeBtn', function() {
+            // Get the source of the selected image
+            var selectedImageSrc = $('#operationButtons img').attr('src');
+
+            // Generate QR code
+            const qr = new QRCodeStyling({
+                nodeCanvas: null,
+                width: 300,
+                height: 300,
+                type: "svg",
+                data: selectedImageSrc,
+                dotsOptions: {
+                    color: "#000000", // Dot color
+                    type: "square" // Dot shape
+                },
+                backgroundOptions: {
+                    color: "#ffffff" // Background color
+                }
+            });
+
+            qr.getRawData("svg").then((buffer) => {
+                // Convert the SVG data to HTML
+                var svgHtml = new XMLSerializer().serializeToString(buffer);
+
+                // Display the generated QR code
+                $('#qrCodeContainer').html(svgHtml);
+            }).catch((error) => {
+                console.error("Error generating QR Code:", error);
+            });
+        });
+
+        // Add click event to Select from Device button
+        $('#selectDeviceBtn').on('click', function() {
+            // Open the file picker dialog for selecting images from the device
+            // For security reasons, JavaScript does not have access to the file system, so this action cannot be simulated programmatically
+            alert("This feature is not supported in this demo. Please select images manually from your device.");
+        });
+    });
+    </script>
+</body>
+</html>
